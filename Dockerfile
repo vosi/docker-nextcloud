@@ -32,10 +32,22 @@ RUN set -ex; \
         postgresql-dev \
         imagemagick-dev \
         libwebp-dev \
+        imap-dev \
+        krb5-dev \
+        libressl-dev \
+        samba-dev \
+        bzip2-dev \
+        gmp-dev \
     ; \
-    \
+        apk add --no-cache \
+        ffmpeg \
+        imagemagick \
+        samba-client \
+#       libreoffice \
+    ; \
     docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr --with-webp-dir=/usr; \
     docker-php-ext-configure ldap; \
+    docker-php-ext-configure imap --with-kerberos --with-imap-ssl; \
     docker-php-ext-install -j "$(nproc)" \
         exif \
         gd \
@@ -46,6 +58,9 @@ RUN set -ex; \
         pdo_mysql \
         pdo_pgsql \
         zip \
+        bz2 \
+        gmp \
+        imap \
     ; \
     \
 # pecl will claim success even if one install fails, so we need to perform each install separately
@@ -53,12 +68,14 @@ RUN set -ex; \
     pecl install memcached-3.1.3; \
     pecl install redis-4.3.0; \
     pecl install imagick-3.4.4; \
+    pecl install smbclient; \
     \
     docker-php-ext-enable \
         apcu \
         memcached \
         redis \
         imagick \
+        smbclient \
     ; \
     \
     runDeps="$( \
@@ -111,7 +128,7 @@ RUN set -ex; \
     tar -xjf nextcloud.tar.bz2 -C /usr/src/; \
     gpgconf --kill all; \
     rm -r "$GNUPGHOME" nextcloud.tar.bz2.asc nextcloud.tar.bz2; \
-    rm -rf /usr/src/nextcloud/updater; \
+    # rm -rf /usr/src/nextcloud/updater; \
     mkdir -p /usr/src/nextcloud/data; \
     mkdir -p /usr/src/nextcloud/custom_apps; \
     chmod +x /usr/src/nextcloud/occ; \
