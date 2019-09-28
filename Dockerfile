@@ -39,7 +39,12 @@ RUN set -ex; \
         bzip2-dev \
         gmp-dev \
     ; \
-    \
+    apk add --no-cache \
+        ffmpeg \
+        imagemagick \
+        samba-client \
+#       libreoffice \
+    ; \
     docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr --with-webp-dir=/usr; \
     docker-php-ext-configure ldap; \
     docker-php-ext-configure imap --with-kerberos --with-imap-ssl; \
