@@ -103,7 +103,6 @@ RUN { \
 
 VOLUME /var/www/html
 
-
 ENV NEXTCLOUD_VERSION 17.0.0
 
 RUN set -ex; \
