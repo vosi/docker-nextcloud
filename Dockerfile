@@ -39,12 +39,7 @@ RUN set -ex; \
         bzip2-dev \
         gmp-dev \
     ; \
-        apk add --no-cache \
-        ffmpeg \
-        imagemagick \
-        samba-client \
-#       libreoffice \
-    ; \
+    \
     docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr --with-webp-dir=/usr; \
     docker-php-ext-configure ldap; \
     docker-php-ext-configure imap --with-kerberos --with-imap-ssl; \
@@ -109,7 +104,7 @@ RUN { \
 VOLUME /var/www/html
 
 
-ENV NEXTCLOUD_VERSION 16.0.2
+ENV NEXTCLOUD_VERSION 17.0.0
 
 RUN set -ex; \
     apk add --no-cache --virtual .fetch-deps \
@@ -128,7 +123,7 @@ RUN set -ex; \
     tar -xjf nextcloud.tar.bz2 -C /usr/src/; \
     gpgconf --kill all; \
     rm -r "$GNUPGHOME" nextcloud.tar.bz2.asc nextcloud.tar.bz2; \
-    # rm -rf /usr/src/nextcloud/updater; \
+    rm -rf /usr/src/nextcloud/updater; \
     mkdir -p /usr/src/nextcloud/data; \
     mkdir -p /usr/src/nextcloud/custom_apps; \
     chmod +x /usr/src/nextcloud/occ; \
