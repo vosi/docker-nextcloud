@@ -1,5 +1,5 @@
 # DO NOT EDIT: created by update.sh from Dockerfile-alpine.template
-FROM php:7.3-fpm-alpine3.10
+FROM php:7.3-fpm-alpine3.11
 
 # entrypoint.sh and cron.sh dependencies
 RUN set -ex; \
@@ -9,7 +9,7 @@ RUN set -ex; \
     ; \
     \
     rm /var/spool/cron/crontabs/root; \
-    echo '*/15 * * * * php -f /var/www/html/cron.php' > /var/spool/cron/crontabs/www-data
+    echo '*/5 * * * * php -f /var/www/html/cron.php' > /var/spool/cron/crontabs/www-data
 
 # install the PHP extensions we need
 # see https://docs.nextcloud.com/server/stable/admin_manual/installation/source_installation.html
@@ -64,8 +64,8 @@ RUN set -ex; \
     ; \
     \
 # pecl will claim success even if one install fails, so we need to perform each install separately
-    pecl install APCu-5.1.17; \
-    pecl install memcached-3.1.3; \
+    pecl install APCu-5.1.18; \
+    pecl install memcached-3.1.5; \
     pecl install redis-4.3.0; \
     pecl install imagick-3.4.4; \
     pecl install smbclient; \
@@ -108,7 +108,7 @@ RUN { \
 
 VOLUME /var/www/html
 
-ENV NEXTCLOUD_VERSION 17.0.0
+ENV NEXTCLOUD_VERSION 17.0.2
 
 RUN set -ex; \
     apk add --no-cache --virtual .fetch-deps \
