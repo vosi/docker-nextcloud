@@ -45,7 +45,7 @@ RUN set -ex; \
         samba-client \
 #       libreoffice \
     ; \
-    docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr --with-webp-dir=/usr; \
+    docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp; \
     docker-php-ext-configure ldap; \
     docker-php-ext-configure imap --with-kerberos --with-imap-ssl; \
     docker-php-ext-install -j "$(nproc)" \
@@ -67,7 +67,7 @@ RUN set -ex; \
 # pecl will claim success even if one install fails, so we need to perform each install separately
     pecl install APCu-5.1.18; \
     pecl install memcached-3.1.5; \
-    pecl install redis-4.3.1; \
+    pecl install redis-5.3.1; \
     pecl install imagick-3.4.4; \
     pecl install smbclient; \
     \
