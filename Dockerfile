@@ -39,12 +39,7 @@ RUN set -ex; \
         bzip2-dev \
         gmp-dev \
     ; \
-    apk add --no-cache \
-        ffmpeg \
-        imagemagick \
-        samba-client \
-#       libreoffice \
-    ; \
+    \
     docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp; \
     docker-php-ext-configure ldap; \
     docker-php-ext-configure imap --with-kerberos --with-imap-ssl; \
@@ -65,7 +60,7 @@ RUN set -ex; \
     ; \
     \
 # pecl will claim success even if one install fails, so we need to perform each install separately
-    pecl install APCu-5.1.18; \
+    pecl install APCu-5.1.19; \
     pecl install memcached-3.1.5; \
     pecl install redis-5.3.1; \
     pecl install imagick-3.4.4; \
@@ -103,13 +98,18 @@ RUN { \
     \
     echo 'memory_limit=512M' > /usr/local/etc/php/conf.d/memory-limit.ini; \
     \
+    { \
+        echo 'upload_max_filesize = 2G'; \
+        echo 'post_max_size = 2G'; \
+    } > /usr/local/etc/php/conf.d/upload-limit.ini; \
     mkdir /var/www/data; \
     chown -R www-data:root /var/www; \
     chmod -R g=u /var/www
 
 VOLUME /var/www/html
 
-ENV NEXTCLOUD_VERSION 19.0.1
+
+ENV NEXTCLOUD_VERSION 20.0.0
 
 RUN set -ex; \
     apk add --no-cache --virtual .fetch-deps \
