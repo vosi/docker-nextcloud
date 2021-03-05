@@ -1,4 +1,3 @@
-
 <?php
 $overwriteHost = getenv('OVERWRITEHOST');
 if ($overwriteHost) {
