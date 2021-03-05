@@ -1,5 +1,5 @@
 # DO NOT EDIT: created by update.sh from Dockerfile-alpine.template
-FROM php:7.4-fpm-alpine3.12
+FROM php:7.4-fpm-alpine3.13
 
 # entrypoint.sh and cron.sh dependencies
 RUN set -ex; \
@@ -68,7 +68,7 @@ RUN set -ex; \
 # pecl will claim success even if one install fails, so we need to perform each install separately
     pecl install APCu-5.1.19; \
     pecl install memcached-3.1.5; \
-    pecl install redis-5.3.1; \
+    pecl install redis-5.3.3; \
     pecl install imagick-3.4.4; \
     pecl install smbclient; \
     \
@@ -91,6 +91,8 @@ RUN set -ex; \
 
 # set recommended PHP.ini settings
 # see https://docs.nextcloud.com/server/12/admin_manual/configuration_server/server_tuning.html#enable-php-opcache
+ENV PHP_MEMORY_LIMIT 512M
+ENV PHP_UPLOAD_LIMIT 512M
 RUN { \
         echo 'opcache.enable=1'; \
         echo 'opcache.interned_strings_buffer=8'; \
@@ -102,12 +104,12 @@ RUN { \
     \
     echo 'apc.enable_cli=1' >> /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini; \
     \
-    echo 'memory_limit=512M' > /usr/local/etc/php/conf.d/memory-limit.ini; \
-    \
     { \
-        echo 'upload_max_filesize = 2G'; \
-        echo 'post_max_size = 2G'; \
-    } > /usr/local/etc/php/conf.d/upload-limit.ini; \
+        echo 'memory_limit=${PHP_MEMORY_LIMIT}'; \
+        echo 'upload_max_filesize=${PHP_UPLOAD_LIMIT}'; \
+        echo 'post_max_size=${PHP_UPLOAD_LIMIT}'; \
+    } > /usr/local/etc/php/conf.d/nextcloud.ini; \
+    \
     mkdir /var/www/data; \
     chown -R www-data:root /var/www; \
     chmod -R g=u /var/www
@@ -115,7 +117,7 @@ RUN { \
 VOLUME /var/www/html
 
 
-ENV NEXTCLOUD_VERSION 20.0.0
+ENV NEXTCLOUD_VERSION 21.0.0
 
 RUN set -ex; \
     apk add --no-cache --virtual .fetch-deps \
